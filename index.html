@@ -1,0 +1,1316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CLASSIFIED ACCESS PORTAL</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Courier+Prime:wght@400;700&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Courier Prime', monospace;
+            background: #000;
+            color: #00aa00;
+            overflow-y: auto;
+            position: relative;
+        }
+
+        /* Animated grid background */
+        .grid-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(rgba(0, 170, 0, 0.02) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 170, 0, 0.02) 1px, transparent 1px);
+            background-size: 20px 20px;
+            animation: gridMove 20s linear infinite;
+            z-index: 1;
+        }
+
+        @keyframes gridMove {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(20px, 20px); }
+        }
+
+        /* Scanlines effect */
+        .scanlines {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+                transparent 50%, 
+                rgba(0, 170, 0, 0.02) 50%
+            );
+            background-size: 100% 4px;
+            animation: scanlineMove 0.1s linear infinite;
+            pointer-events: none;
+            z-index: 10;
+        }
+
+        @keyframes scanlineMove {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(4px); }
+        }
+
+        /* LOGIN SCREEN */
+        .login-screen {
+            position: relative;
+            z-index: 5;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        /* Header Section */
+        .header {
+            text-align: center;
+            margin-bottom: 3rem;
+            position: relative;
+        }
+
+        .seal {
+            width: 80px;
+            height: 80px;
+            border: 3px solid #00aa00;
+            border-radius: 50%;
+            margin: 0 auto 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes glow {
+            from { box-shadow: 0 0 15px rgba(0, 170, 0, 0.3); }
+            to { box-shadow: 0 0 20px rgba(0, 170, 0, 0.5); }
+        }
+
+        .agency-name {
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+            letter-spacing: 2px;
+        }
+
+        .system-name {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #fff;
+            margin-bottom: 1rem;
+            text-shadow: 0 0 5px rgba(0, 170, 0, 0.3);
+        }
+
+        .warning {
+            color: #ff0000;
+            font-size: 0.9rem;
+            animation: blink 1.5s infinite;
+            letter-spacing: 1px;
+        }
+
+        @keyframes blink {
+            0%, 50% { opacity: 1; }
+            51%, 100% { opacity: 0.3; }
+        }
+
+        /* Classification stamps */
+        .top-secret {
+            position: absolute;
+            top: -40px;
+            right: -100px;
+            color: #ff0000;
+            font-weight: bold;
+            font-size: 1.4rem;
+            transform: rotate(15deg);
+            border: 4px solid #ff0000;
+            padding: 20px 30px;
+            background: rgba(255, 0, 0, 0.1);
+            letter-spacing: 4px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.7);
+            box-shadow: 0 0 15px rgba(255, 0, 0, 0.4);
+            line-height: 1.2;
+        }
+
+        /* Terminal Window */
+        .terminal {
+            background: rgba(0, 20, 0, 0.95);
+            border: 2px solid #00aa00;
+            border-radius: 10px;
+            padding: 2rem;
+            width: 100%;
+            max-width: 500px;
+            position: relative;
+            box-shadow: 
+                0 0 20px rgba(0, 170, 0, 0.2),
+                inset 0 0 20px rgba(0, 170, 0, 0.05);
+        }
+
+        .terminal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid #00aa00;
+        }
+
+        .terminal-title {
+            font-size: 0.9rem;
+            color: #00aa00;
+        }
+
+        .terminal-controls {
+            display: flex;
+            gap: 5px;
+        }
+
+        .control-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #ff0000;
+        }
+
+        .control-dot:nth-child(2) { background: #ffff00; }
+        .control-dot:nth-child(3) { background: #00aa00; }
+
+        /* System logs */
+        .system-logs {
+            margin-bottom: 1.5rem;
+            font-size: 0.8rem;
+            color: #008800;
+        }
+
+        .log-line {
+            margin-bottom: 0.3rem;
+            opacity: 0;
+            animation: typeIn 0.5s ease-out forwards;
+        }
+
+        .log-line:nth-child(1) { animation-delay: 0.5s; }
+        .log-line:nth-child(2) { animation-delay: 1s; }
+        .log-line:nth-child(3) { animation-delay: 1.5s; }
+        .log-line:nth-child(4) { animation-delay: 2s; }
+        .log-line:nth-child(5) { animation-delay: 2.5s; }
+
+        @keyframes typeIn {
+            from { opacity: 0; transform: translateX(-10px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        /* Login form */
+        .login-form {
+            opacity: 0;
+            animation: fadeIn 0.5s ease-out 3s forwards;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+            color: #00aa00;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 0.8rem;
+            background: rgba(0, 0, 0, 0.8);
+            border: 1px solid #00aa00;
+            border-radius: 3px;
+            color: #00aa00;
+            font-family: 'Courier Prime', monospace;
+            font-size: 0.9rem;
+        }
+
+        .form-input:focus {
+            outline: none;
+            box-shadow: 0 0 8px rgba(0, 170, 0, 0.3);
+            background: rgba(0, 30, 0, 0.8);
+        }
+
+        .login-button {
+            width: 100%;
+            padding: 1rem;
+            background: rgba(0, 100, 0, 0.3);
+            border: 2px solid #00aa00;
+            border-radius: 5px;
+            color: #00aa00;
+            font-family: 'Courier Prime', monospace;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 1rem;
+        }
+
+        .login-button:hover {
+            background: rgba(0, 120, 0, 0.4);
+            box-shadow: 0 0 15px rgba(0, 170, 0, 0.2);
+        }
+
+        .login-button:active {
+            transform: scale(0.98);
+        }
+
+        /* Status messages */
+        .status-message {
+            margin-top: 1rem;
+            padding: 1rem;
+            border-radius: 5px;
+            font-size: 0.9rem;
+            text-align: center;
+            display: none;
+        }
+
+        .status-message.error {
+            background: rgba(255, 0, 0, 0.1);
+            border: 1px solid #ff0000;
+            color: #ff0000;
+        }
+
+        .status-message.warning {
+            background: rgba(255, 255, 0, 0.1);
+            border: 1px solid #ffff00;
+            color: #ffff00;
+        }
+
+        .status-message.lockdown {
+            background: rgba(255, 0, 0, 0.2);
+            border: 2px solid #ff0000;
+            color: #ff0000;
+            animation: flashRed 0.5s infinite;
+        }
+
+        @keyframes flashRed {
+            0%, 100% { background: rgba(255, 0, 0, 0.2); }
+            50% { background: rgba(255, 0, 0, 0.4); }
+        }
+
+        .status-message.success {
+            background: rgba(0, 170, 0, 0.1);
+            border: 1px solid #00aa00;
+            color: #00aa00;
+        }
+
+        /* Cursor blink */
+        .cursor {
+            animation: cursorBlink 1s infinite;
+        }
+
+        @keyframes cursorBlink {
+            0%, 50% { opacity: 1; }
+            51%, 100% { opacity: 0; }
+        }
+
+        /* Loading animation */
+        .loading {
+            display: none;
+            text-align: center;
+            margin-top: 1rem;
+        }
+
+        .loading-dots {
+            color: #00aa00;
+            font-size: 1.2rem;
+        }
+
+        .loading-dots::after {
+            content: '';
+            animation: loadingDots 1.5s infinite;
+        }
+
+        @keyframes loadingDots {
+            0% { content: ''; }
+            25% { content: '.'; }
+            50% { content: '..'; }
+            75% { content: '...'; }
+            100% { content: ''; }
+        }
+
+        /* Hidden content for successful login */
+        .success-content {
+            display: none;
+            text-align: center;
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        .access-granted {
+            font-size: 1.5rem;
+            color: #00aa00;
+            margin-bottom: 1rem;
+            animation: glow 1s ease-in-out infinite alternate;
+        }
+
+        /* DOSSIER STYLES */
+        .dossier-screen {
+            display: none;
+            position: relative;
+            z-index: 5;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+            background: #0a0f0d;
+            min-height: 100vh;
+        }
+
+        /* Update colors for dossier */
+        .dossier-screen {
+            color: #00ff88;
+        }
+
+        /* Header */
+        .dossier-header {
+            text-align: center;
+            margin-bottom: 2rem;
+            border-bottom: 2px solid #33ffbb;
+            padding-bottom: 1rem;
+        }
+
+        .project-title {
+            font-size: 2rem;
+            color: #00ff88;
+            text-shadow: 0 0 10px rgba(0, 255, 136, 0.5);
+            margin-bottom: 0.5rem;
+        }
+
+        .classification {
+            color: #ff4c4c;
+            font-size: 0.9rem;
+            font-weight: bold;
+            letter-spacing: 2px;
+        }
+
+        .subject-id {
+            color: #33ffbb;
+            font-size: 1rem;
+            margin-top: 0.5rem;
+        }
+
+        /* Navigation Tabs */
+        .nav-tabs {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 2rem;
+            justify-content: center;
+        }
+
+        .tab {
+            background: rgba(51, 255, 187, 0.1);
+            border: 1px solid #33ffbb;
+            color: #00ff88;
+            padding: 0.8rem 1.5rem;
+            cursor: pointer;
+            font-family: 'Courier Prime', monospace;
+            font-size: 0.9rem;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .tab:hover {
+            background: rgba(51, 255, 187, 0.2);
+            box-shadow: 0 0 10px rgba(51, 255, 187, 0.3);
+        }
+
+        .tab.active {
+            background: rgba(0, 255, 136, 0.2);
+            border-color: #00ff88;
+            color: #fff;
+        }
+
+        .tab::before {
+            content: '📁';
+            margin-right: 0.5rem;
+        }
+
+        /* Main Content Area */
+        .content-area {
+            background: rgba(10, 15, 13, 0.95);
+            border: 2px solid #33ffbb;
+            border-radius: 10px;
+            padding: 2rem;
+            min-height: 600px;
+            box-shadow: 
+                0 0 20px rgba(51, 255, 187, 0.2),
+                inset 0 0 20px rgba(51, 255, 187, 0.05);
+        }
+
+        .section {
+            display: none;
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            color: #00ff88;
+            margin-bottom: 1.5rem;
+            text-align: center;
+            border-bottom: 1px solid #009966;
+            padding-bottom: 0.5rem;
+        }
+
+        /* Subject Profile Specific */
+        .profile-grid {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .profile-image {
+            background: rgba(0, 153, 102, 0.1);
+            border: 2px dashed #33ffbb;
+            border-radius: 5px;
+            height: 300px;
+            width: 220px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            color: #009966;
+            flex-direction: column;
+            text-align: center;
+        }
+
+        .profile-details {
+            display: grid;
+            gap: 1rem;
+        }
+
+        .detail-row {
+            display: grid;
+            grid-template-columns: 150px 1fr;
+            gap: 1rem;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid rgba(51, 255, 187, 0.2);
+        }
+
+        .detail-label {
+            color: #33ffbb;
+            font-weight: bold;
+        }
+
+        .detail-value {
+            color: #00ff88;
+        }
+
+        .classified {
+            background: #ff4c4c;
+            color: #000;
+            padding: 2px 6px;
+            font-size: 0.8rem;
+            border-radius: 3px;
+            font-weight: bold;
+        }
+
+        /* Observation Logs */
+        .log-entry {
+            background: rgba(0, 153, 102, 0.05);
+            border-left: 3px solid #33ffbb;
+            margin-bottom: 1rem;
+            padding: 1rem;
+            border-radius: 0 5px 5px 0;
+        }
+
+        .log-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        .log-timestamp {
+            color: #009966;
+        }
+
+        .log-agent {
+            color: #33ffbb;
+        }
+
+        .log-content {
+            color: #00ff88;
+            line-height: 1.4;
+        }
+
+        /* Psychological Profile */
+        .psych-section {
+            margin-bottom: 2rem;
+        }
+
+        .psych-header {
+            color: #33ffbb;
+            font-size: 1.1rem;
+            margin-bottom: 1rem;
+            border-bottom: 1px solid #009966;
+            padding-bottom: 0.3rem;
+        }
+
+        .trait-list {
+            list-style: none;
+            padding-left: 1rem;
+        }
+
+        .trait-list li {
+            color: #00ff88;
+            margin-bottom: 0.5rem;
+            position: relative;
+        }
+
+        .trait-list li::before {
+            content: '→ ';
+            color: #33ffbb;
+            position: absolute;
+            left: -1rem;
+        }
+
+        /* Classified Section */
+        .classified-content {
+            text-align: center;
+            padding: 3rem 1rem;
+        }
+
+        .access-denied {
+            color: #ff4c4c;
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            animation: blink 1.5s infinite;
+        }
+
+        .unlock-button {
+            background: rgba(255, 76, 76, 0.2);
+            border: 2px solid #ff4c4c;
+            color: #ff4c4c;
+            padding: 1rem 2rem;
+            font-family: 'Courier Prime', monospace;
+            font-size: 1rem;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 1rem;
+        }
+
+        .unlock-button:hover {
+            background: rgba(255, 76, 76, 0.3);
+            box-shadow: 0 0 15px rgba(255, 76, 76, 0.3);
+        }
+
+        /* Status bar */
+        .status-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(10, 15, 13, 0.95);
+            border-top: 1px solid #33ffbb;
+            padding: 0.5rem 1rem;
+            font-size: 0.8rem;
+            z-index: 20;
+            display: none;
+        }
+
+        .status-left {
+            float: left;
+            color: #009966;
+        }
+
+        .status-right {
+            float: right;
+            color: #33ffbb;
+        }
+
+        /* Birthday celebration styles - ELEGANT VERSION */
+        .birthday-mode {
+            background: linear-gradient(135deg, #0a0f0d 0%, #1a1f1d 50%, #0a0f0d 100%) !important;
+            transition: background 2s ease-in-out;
+        }
+
+        .birthday-mode .grid-bg {
+            background-image: 
+                linear-gradient(rgba(255, 215, 136, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 215, 136, 0.03) 1px, transparent 1px);
+            transition: background-image 2s ease-in-out;
+        }
+
+        .birthday-mode .scanlines {
+            background: linear-gradient(
+                transparent 50%, 
+                rgba(255, 215, 136, 0.015) 50%
+            );
+            transition: background 2s ease-in-out;
+        }
+
+        .birthday-sparkles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 15;
+        }
+
+        .sparkle {
+            position: absolute;
+            color: #ffd788;
+            font-size: 12px;
+            animation: sparkleFloat 4s infinite ease-in-out;
+            opacity: 0;
+        }
+
+        @keyframes sparkleFloat {
+            0% { 
+                opacity: 0; 
+                transform: translateY(100vh) rotate(0deg) scale(0.5);
+            }
+            10% { 
+                opacity: 1; 
+            }
+            90% { 
+                opacity: 1; 
+            }
+            100% { 
+                opacity: 0; 
+                transform: translateY(-20px) rotate(360deg) scale(1.2);
+            }
+        }
+        @media (max-width: 768px) {
+            .login-screen .terminal {
+                padding: 1rem;
+            }
+            
+            .agency-name {
+                font-size: 1rem;
+            }
+            
+            .system-name {
+                font-size: 1.2rem;
+            }
+
+            .top-secret {
+                right: -50px;
+                font-size: 1rem;
+                padding: 15px 20px;
+            }
+
+            .profile-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .nav-tabs {
+                justify-content: flex-start;
+            }
+            
+            .tab {
+                font-size: 0.8rem;
+                padding: 0.6rem 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="grid-bg"></div>
+    <div class="scanlines"></div>
+    
+    <!-- LOGIN SCREEN -->
+    <div class="login-screen" id="loginScreen">
+        <div class="header">
+            <div class="top-secret">TOP SECRET<br>NOFORN</div>
+            <div class="seal">🛡️</div>
+            <div class="agency-name">DEPARTMENT OF ANOMALOUS PERSONS RESEARCH</div>
+            <div class="system-name">CLASSIFIED SUBJECT MONITORING DATABASE</div>
+            <div class="warning">⚠️ AUTHORIZED ACCESS ONLY ⚠️</div>
+        </div>
+
+        <div class="terminal">
+            <div class="terminal-header">
+                <div class="terminal-title">SECURE_TERMINAL_v2.4.7</div>
+                <div class="terminal-controls">
+                    <div class="control-dot"></div>
+                    <div class="control-dot"></div>
+                    <div class="control-dot"></div>
+                </div>
+            </div>
+
+            <div class="system-logs">
+                <div class="log-line">[07:46:32] - VPN tunnel established from GULISTAN_NODE</div>
+                <div class="log-line">[07:46:34] - MONITORING_AGENT_T authentication: ✅ VERIFIED</div>
+                <div class="log-line">[07:46:38] - Subject biometric match confirmed: [CLASSIFIED]</div>
+                <div class="log-line">[07:46:45] - CAUTION: Subject exhibits dangerous levels of awesomeness</div>
+                <div class="log-line">[07:46:47] - Database access required. Please authenticate<span class="cursor">_</span></div>
+            </div>
+
+            <form class="login-form" id="loginForm">
+                <div class="form-group">
+                    <label class="form-label">AGENT IDENTIFICATION:</label>
+                    <input type="text" class="form-input" id="agentId" placeholder="MONITORING_AGENT_T" value="MONITORING_AGENT_T" readonly>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">CLEARANCE CODE:</label>
+                    <input type="password" class="form-input" id="clearanceCode" placeholder="Enter access code..." autofocus>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">BIOMETRIC SCAN:</label>
+                    <input type="text" class="form-input" value="✅ VERIFIED" readonly>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">ACCESS LEVEL:</label>
+                    <input type="text" class="form-input" value="ALPHA-7" readonly>
+                </div>
+
+                <button type="submit" class="login-button">ACCESS CLASSIFIED DATABASE</button>
+            </form>
+
+            <div class="status-message" id="statusMessage"></div>
+            
+            <div class="loading" id="loading">
+                <div class="loading-dots">ACCESSING DATABASE</div>
+                <div style="margin-top: 0.5rem; font-size: 0.8rem;">Please wait while we decrypt files...</div>
+            </div>
+
+            <div class="success-content" id="successContent">
+                <div class="access-granted">🔓 ACCESS GRANTED</div>
+                <div>Loading Subject Dossier...</div>
+                <div style="margin-top: 1rem; font-size: 0.8rem;">Welcome to the most classified file in existence</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- DOSSIER SCREEN -->
+    <div class="dossier-screen" id="dossierScreen">
+        <!-- Header -->
+        <div class="dossier-header">
+            <div class="project-title">PROJECT MUXLISA</div>
+            <div class="classification">⚠️ ULTRA CLASSIFIED - ALPHA CLEARANCE ⚠️</div>
+            <div class="subject-id">SUBJECT ID: MXL-2307 | STATUS: ACTIVE MONITORING</div>
+        </div>
+
+        <!-- Navigation Tabs -->
+        <div class="nav-tabs">
+            <div class="tab active" data-section="profile">SUBJECT PROFILE</div>
+            <div class="tab" data-section="observations">OBSERVATION LOGS</div>
+            <div class="tab" data-section="psychological">PSYCHOLOGICAL PROFILE</div>
+            <div class="tab" data-section="classified">CLASSIFIED SECTION</div>
+        </div>
+
+        <!-- Main Content Area -->
+        <div class="content-area">
+            <!-- Subject Profile Section -->
+            <div class="section active" id="profile">
+                <div class="section-title">📋 SUBJECT PROFILE - MUXLISA</div>
+                
+                <div class="profile-grid">
+                    <div class="profile-image" onclick="uploadPhoto()" style="cursor: pointer;">
+                        📸<br>
+                        <small style="font-size: 0.8rem; margin-top: 1rem; color: #009966; font-weight: bold;">INSERT YOUR PHOTO HERE<br>YOU HAVE BETTER ONES THAN WE DO</small>
+                        <input type="file" id="photoUpload" accept="image/*" style="display: none;">
+                    </div>
+                    
+                    <div class="profile-details">
+                        <div class="detail-row">
+                            <div class="detail-label">DESIGNATION:</div>
+                            <div class="detail-value">Muxlisa Qudratova</div>
+                        </div>
+                        <div class="detail-row">
+                            <div class="detail-label">DATE OF BIRTH:</div>
+                            <div class="detail-value">July 23rd, 2001</div>
+                        </div>
+                        <div class="detail-row">
+                            <div class="detail-label">THREAT LEVEL:</div>
+                            <div class="detail-value">EXTREME ADORABILITY</div>
+                        </div>
+                        <div class="detail-row">
+                            <div class="detail-label">SPECIAL ABILITIES:</div>
+                            <div class="detail-value">Korean drama analysis, poetry memorization (7-page capacity in 30 minutes), hair transformations every May, casual teasing of friends</div>
+                        </div>
+                        <div class="detail-row">
+                            <div class="detail-label">CONTAINMENT:</div>
+                            <div class="detail-value"><span class="classified">ATTEMPTED BUT FAILED</span></div>
+                        </div>
+                        <div class="detail-row">
+                            <div class="detail-label">LAST KNOWN LOCATION:</div>
+                            <div class="detail-value">Compass Mall, Tashkent</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div style="color: #009966; font-style: italic; text-align: center; margin-top: 2rem;">
+                    Note: Subject exhibits unprecedented levels of awesomeness.
+                </div>
+            </div>
+
+            <!-- Observation Logs Section -->
+            <div class="section" id="observations">
+                <div class="section-title">📊 OBSERVATION LOGS</div>
+                
+                <div class="log-entry">
+                    <div class="log-header">
+                        <div class="log-timestamp">[2024-04-17 15:32:23]</div>
+                        <div class="log-agent">MONITORING_AGENT_T</div>
+                    </div>
+                    <div class="log-content">
+                        Subject's laugh during "Hayot Xavfsizligi" lesson was pure magic. 
+                        The sound filled the room with this warm, genuine joy that hit me right in the chest.
+                        It's the kind of laugh that makes you forget your worries for a moment - 
+                        bright, unfiltered, absolutely beautiful. Made my whole day better just hearing it.
+                        Classification: Heart-warming anomaly.
+                    </div>
+                </div>
+
+                <div class="log-entry">
+                    <div class="log-header">
+                        <div class="log-timestamp">[2024-[SURVEILLANCE COMPROMISED]]</div>
+                        <div class="log-agent">MONITORING_AGENT_T</div>
+                    </div>
+                    <div class="log-content">
+                        Unless her mother yells from downstairs, she can sleep for 12+ hours straight.
+                        Classification: Legendary sleep capabilities.
+                    </div>
+                </div>
+            </div>
+
+            <!-- Psychological Profile Section -->
+            <div class="section" id="psychological">
+                <div class="section-title">🧠 PSYCHOLOGICAL PROFILE</div>
+                
+                <div class="psych-section">
+                    <div class="psych-header">Core Personality Traits:</div>
+                    <ul class="trait-list">
+                        <li>Has this specific laugh that's impossible to forget once you hear it</li>
+                        <li>Smart in that quiet way</li>
+                    </ul>
+                </div>
+
+                <div class="psych-section">
+                    <div class="psych-header">Behavioral Patterns:</div>
+                    <ul class="trait-list">
+                        <li>Favorite activities: Korean dramas, teaching people things, karaoke sessions</li>
+                        <li>Communication style: Direct but never harsh</li>
+                        <li>Hair: Short and fluffy in this unique way that makes you want to touch it, though sometimes it's perfectly straight</li>
+                    </ul>
+                </div>
+
+                <div class="psych-section">
+                    <div class="psych-header">Social Dynamics:</div>
+                    <ul class="trait-list">
+                        <li>Inseparable bond with best friend Nilufar - they spend a ridiculous amount of time together and talk about everything</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Classified Section -->
+            <div class="section" id="classified">
+                <div class="section-title">🔒 CLASSIFIED SECTION</div>
+                
+                <div class="classified-content">
+                    <div style="color: #33ffbb; margin-bottom: 2rem; line-height: 1.6; text-align: center;">
+                        Subject MXL-2307 is the most significant encounter in this observer's career.<br>
+                        Evidence suggests prolonged exposure results in permanent admiration and<br>
+                        unexpected life improvements.
+                    </div>
+                    
+                    <div class="access-denied">🚫 ACCESS DENIED 🚫</div>
+                    
+                    <div style="color: #33ffbb; margin-bottom: 2rem;">
+                        Required clearance: LEVEL ∞ "TRUE FRIENDSHIP"<br>
+                        Current clearance: INSUFFICIENT
+                    </div>
+                    
+                    <button class="unlock-button" onclick="unlockClassified()">
+                        🔓 EMERGENCY ACCESS OVERRIDE
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Status Bar -->
+    <div class="status-bar" id="statusBar">
+        <div class="status-left">
+            SECURE CONNECTION ESTABLISHED | MONITORING_AGENT_T AUTHENTICATED | GULISTAN_NODE
+        </div>
+        <div class="status-right">
+            SYSTEM STATUS: OPERATIONAL | SURVEILLANCE: ACTIVE
+        </div>
+    </div>
+
+    <script>
+        let attemptCount = 0;
+        const correctPassword = 'MXL_2307';
+        
+        // Sound effects using Web Audio API
+        const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        
+        function playKeyboardClick() {
+            // More realistic keyboard click sound
+            const oscillator = audioContext.createOscillator();
+            const gainNode = audioContext.createGain();
+            const filterNode = audioContext.createBiquadFilter();
+            
+            oscillator.connect(filterNode);
+            filterNode.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+            
+            // Sharp, short click sound
+            oscillator.frequency.setValueAtTime(2000, audioContext.currentTime);
+            oscillator.frequency.exponentialRampToValueAtTime(100, audioContext.currentTime + 0.01);
+            oscillator.type = 'square';
+            
+            filterNode.type = 'highpass';
+            filterNode.frequency.value = 1000;
+            
+            gainNode.gain.setValueAtTime(0.05, audioContext.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.001, audioContext.currentTime + 0.05);
+            
+            oscillator.start(audioContext.currentTime);
+            oscillator.stop(audioContext.currentTime + 0.05);
+        }
+        
+        function playError() {
+            // Deep error beep
+            const oscillator = audioContext.createOscillator();
+            const gainNode = audioContext.createGain();
+            
+            oscillator.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+            
+            oscillator.frequency.value = 200;
+            oscillator.type = 'sawtooth';
+            
+            gainNode.gain.setValueAtTime(0.1, audioContext.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.5);
+            
+            oscillator.start(audioContext.currentTime);
+            oscillator.stop(audioContext.currentTime + 0.5);
+        }
+        
+        function playSuccess() {
+            // Success chime sequence
+            const frequencies = [523, 659, 784]; // C, E, G notes
+            frequencies.forEach((freq, index) => {
+                setTimeout(() => {
+                    const oscillator = audioContext.createOscillator();
+                    const gainNode = audioContext.createGain();
+                    
+                    oscillator.connect(gainNode);
+                    gainNode.connect(audioContext.destination);
+                    
+                    oscillator.frequency.value = freq;
+                    oscillator.type = 'sine';
+                    
+                    gainNode.gain.setValueAtTime(0.1, audioContext.currentTime);
+                    gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.3);
+                    
+                    oscillator.start(audioContext.currentTime);
+                    oscillator.stop(audioContext.currentTime + 0.3);
+                }, index * 100);
+            });
+        }
+        
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const clearanceCode = document.getElementById('clearanceCode').value.trim();
+            const statusMessage = document.getElementById('statusMessage');
+            const loading = document.getElementById('loading');
+            const successContent = document.getElementById('successContent');
+            const loginForm = document.getElementById('loginForm');
+            
+            // Hide previous messages
+            statusMessage.style.display = 'none';
+            statusMessage.className = 'status-message';
+            
+            if (clearanceCode.toUpperCase() === correctPassword) {
+                // Correct password - success sequence
+                playSuccess();
+                loginForm.style.display = 'none';
+                loading.style.display = 'block';
+                
+                setTimeout(() => {
+                    loading.style.display = 'none';
+                    successContent.style.display = 'block';
+                    
+                    setTimeout(() => {
+                        // Transition to dossier
+                        document.getElementById('loginScreen').style.display = 'none';
+                        document.getElementById('dossierScreen').style.display = 'block';
+                        document.getElementById('statusBar').style.display = 'block';
+                        
+                        // Update background for dossier
+                        document.body.style.background = '#0a0f0d';
+                        document.body.style.color = '#00ff88';
+                    }, 3000);
+                }, 2000);
+                
+            } else {
+                // Wrong password - progressive responses
+                playError();
+                attemptCount++;
+                
+                if (attemptCount === 1) {
+                    statusMessage.className = 'status-message error';
+                    statusMessage.innerHTML = `
+                        ⚠️ <strong>ACCESS DENIED</strong><br>
+                        Authentication failed. Please verify credentials.<br>
+                        Remaining attempts: 2<br>
+                        <small>[SECURITY_LOG: Unauthorized access attempt logged]</small>
+                    `;
+                    statusMessage.style.display = 'block';
+                    
+                } else if (attemptCount === 2) {
+                    statusMessage.className = 'status-message warning';
+                    statusMessage.innerHTML = `
+                        ❌ <strong>SERIOUSLY?</strong><br>
+                        Try your shortened name + those numbers someone<br>
+                        thought were your phone number...
+                    `;
+                    statusMessage.style.display = 'block';
+                    
+                } else {
+                    statusMessage.className = 'status-message lockdown';
+                    statusMessage.innerHTML = `
+                        🚨 <strong>LOCKDOWN INITIATED</strong> 🚨<br>
+                        SECURITY BREACH DETECTED!<br>
+                        ALERTING ALL AGENTS...
+                    `;
+                    statusMessage.style.display = 'block';
+                    
+                    setTimeout(() => {
+                        statusMessage.className = 'status-message success';
+                        statusMessage.innerHTML = `
+                            Just kidding! 😄<br>
+                            Try: <strong>'MXL_2307'</strong>
+                        `;
+                        attemptCount = 0; // Reset for real password
+                    }, 3000);
+                }
+            }
+            
+            // Clear input and scroll to message
+            document.getElementById('clearanceCode').value = '';
+            setTimeout(() => {
+                statusMessage.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }, 100);
+        });
+        
+        // Add keyboard click sound effects
+        document.getElementById('clearanceCode').addEventListener('input', function() {
+            // Resume audio context if needed
+            if (audioContext.state === 'suspended') {
+                audioContext.resume().then(() => {
+                    playKeyboardClick();
+                });
+            } else {
+                playKeyboardClick();
+            }
+        });
+        
+        // Also add sound for backspace/delete
+        document.getElementById('clearanceCode').addEventListener('keydown', function(e) {
+            if (e.key === 'Backspace' || e.key === 'Delete') {
+                if (audioContext.state === 'suspended') {
+                    audioContext.resume().then(() => {
+                        playKeyboardClick();
+                    });
+                } else {
+                    playKeyboardClick();
+                }
+            }
+        });
+
+        // DOSSIER FUNCTIONALITY
+        // Tab switching functionality
+        document.querySelectorAll('.tab').forEach(tab => {
+            tab.addEventListener('click', function() {
+                const sectionId = this.dataset.section;
+                
+                // Update active tab
+                document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                this.classList.add('active');
+                
+                // Update active section
+                document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+                document.getElementById(sectionId).classList.add('active');
+                
+                // Play file access sound
+                playFileAccessSound();
+            });
+        });
+
+        function playFileAccessSound() {
+            const oscillator = audioContext.createOscillator();
+            const gainNode = audioContext.createGain();
+            
+            oscillator.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+            
+            oscillator.frequency.setValueAtTime(800, audioContext.currentTime);
+            oscillator.frequency.exponentialRampToValueAtTime(400, audioContext.currentTime + 0.1);
+            oscillator.type = 'square';
+            
+            gainNode.gain.setValueAtTime(0.05, audioContext.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.001, audioContext.currentTime + 0.1);
+            
+            oscillator.start(audioContext.currentTime);
+            oscillator.stop(audioContext.currentTime + 0.1);
+        }
+
+        function uploadPhoto() {
+            document.getElementById('photoUpload').click();
+        }
+
+        document.getElementById('photoUpload').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const profileImage = document.querySelector('.profile-image');
+                    profileImage.innerHTML = `
+                        <img src="${e.target.result}" style="width: 100%; height: 100%; object-fit: cover; border-radius: 3px;" alt="Subject Photo">
+                        <small style="position: absolute; bottom: 5px; left: 50%; transform: translateX(-50%); font-size: 0.6rem; color: #009966; background: rgba(0,0,0,0.8); padding: 2px 8px; border-radius: 3px;">CLICK TO CHANGE PHOTO</small>
+                    `;
+                    profileImage.style.position = 'relative';
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        function unlockClassified() {
+            const classifiedSection = document.getElementById('classified');
+            classifiedSection.innerHTML = `
+                <div class="section-title">🔓 CLASSIFIED SECTION - UNLOCKED</div>
+                <div style="text-align: center; padding: 2rem;">
+                    <div style="color: #00ff88; font-size: 1.3rem; margin-bottom: 2rem;">
+                        🎉 EMERGENCY ACCESS GRANTED 🎉
+                    </div>
+                    <div style="color: #ffd788; font-size: 1.2rem; line-height: 1.8; text-shadow: 0 0 10px rgba(255, 215, 136, 0.3);">
+                        HAPPY BIRTHDAY, MUXLISA! 🎂<br><br>
+                        This whole thing was just an excuse to tell you how awesome you are<br>
+                        in the most ridiculous way possible.<br><br>
+                        Hope your 24th is amazing! 🌟
+                    </div>
+                    <div style="font-size: 0.9rem; color: #009966; font-style: italic; margin-top: 2rem;">
+                        End of classified content.
+                    </div>
+                </div>
+            `;
+            
+            // Add elegant birthday celebration effects
+            document.body.classList.add('birthday-mode');
+            createSparkles();
+            
+            // Play success sound
+            playSuccessSound();
+        }
+
+        function createSparkles() {
+            const sparkleContainer = document.createElement('div');
+            sparkleContainer.className = 'birthday-sparkles';
+            document.body.appendChild(sparkleContainer);
+
+            // Create initial sparkles
+            for (let i = 0; i < 15; i++) {
+                setTimeout(() => {
+                    const sparkle = document.createElement('div');
+                    sparkle.className = 'sparkle';
+                    sparkle.innerHTML = ['✨', '🌟', '💫'][Math.floor(Math.random() * 3)];
+                    sparkle.style.left = Math.random() * 100 + '%';
+                    sparkle.style.animationDelay = Math.random() * 4 + 's';
+                    sparkle.style.animationDuration = (Math.random() * 3 + 3) + 's';
+                    sparkleContainer.appendChild(sparkle);
+
+                    // Remove sparkle after animation
+                    setTimeout(() => {
+                        if (sparkle.parentNode) {
+                            sparkle.parentNode.removeChild(sparkle);
+                        }
+                    }, 7000);
+                }, i * 200);
+            }
+
+            // Continue creating sparkles every few seconds
+            setInterval(() => {
+                if (document.body.classList.contains('birthday-mode')) {
+                    const sparkle = document.createElement('div');
+                    sparkle.className = 'sparkle';
+                    sparkle.innerHTML = ['✨', '🌟', '💫'][Math.floor(Math.random() * 3)];
+                    sparkle.style.left = Math.random() * 100 + '%';
+                    sparkle.style.animationDuration = (Math.random() * 3 + 3) + 's';
+                    sparkleContainer.appendChild(sparkle);
+
+                    setTimeout(() => {
+                        if (sparkle.parentNode) {
+                            sparkle.parentNode.removeChild(sparkle);
+                        }
+                    }, 7000);
+                }
+            }, 1500);
+        }
+
+        function playSuccessSound() {
+            const frequencies = [523, 659, 784, 1047]; // C, E, G, C notes
+            frequencies.forEach((freq, index) => {
+                setTimeout(() => {
+                    const oscillator = audioContext.createOscillator();
+                    const gainNode = audioContext.createGain();
+                    
+                    oscillator.connect(gainNode);
+                    gainNode.connect(audioContext.destination);
+                    
+                    oscillator.frequency.value = freq;
+                    oscillator.type = 'sine';
+                    
+                    gainNode.gain.setValueAtTime(0.1, audioContext.currentTime);
+                    gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.4);
+                    
+                    oscillator.start(audioContext.currentTime);
+                    oscillator.stop(audioContext.currentTime + 0.4);
+                }, index * 150);
+            });
+        }
+        
+        // Initialize audio context on ANY user interaction
+        document.addEventListener('click', function initAudio() {
+            audioContext.resume();
+        });
+        
+        document.addEventListener('keydown', function initAudio() {
+            audioContext.resume();
+        });
+        
+        // Auto-focus password field
+        document.getElementById('clearanceCode').focus();
+    </script>
+</body>
+</html>
